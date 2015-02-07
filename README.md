@@ -1,6 +1,9 @@
 # Cewi/Excel plugin for CakePHP
 
-! Not  Ready For Production !
+! Not  Ready For Production !  
+
+The plugin is based on the work of [dakota]
+(https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://phpexcel.codeplex.com/) for the excel-related functionality. 
 
 ## Installation
 
@@ -24,3 +27,4 @@ composer require Cewi/Excel
 ```
 
 should fetch the plugin.
+
