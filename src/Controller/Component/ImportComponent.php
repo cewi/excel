@@ -7,6 +7,7 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Validation\Validator;
 use Cake\ORM\Exception\MissingTableClassException;
 use Cake\ORM\Table;
+use Cake\Database\Schema;
 
 /**
  * Import component
@@ -95,16 +96,42 @@ class ImportComponent extends Component
         return $result;
     }
 
+    /**
+     * Truncate Table and then import records
+     * value of primary key will be kept
+     *
+     * @param string $file filename with full path
+     * @param Table $table
+     * @return int Number of imprted records
+     */
     public function overwrite($file = null, $table = null)
     {
+        //prepare Data
         $data = $this->prepareData($file, $table);
+        //truncate Table
         $table->deleteAll([$table->primaryKey() . ' >' => 0]);
-        foreach ($data as $record) {
-            $table->findOrCreate($record);
+
+        //cretae entitites
+        $fieldList = $table->schema()->columns();
+        $entities = $table->newEntities($data, ['fieldList' => $fieldList]);
+
+        //save data
+        $imported = 0;
+        foreach ($entities as $entity) {
+            if ($table->save($entity, ['checkExisting' => false])) {
+                $imported++;
+            }
         }
-        return count($data);
+        return $imported;
     }
 
+    /**
+     * add records to table
+     *
+     * @param string $file filename with full path
+     * @param type $table
+     * @return int Number of imported records
+     */
     public function add($file = null, $table = null)
     {
         $data = $this->prepareData($file, $table);

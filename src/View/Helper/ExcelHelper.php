@@ -85,7 +85,7 @@ class ExcelHelper extends Helper
     }
 
     /**
-     * adds Metadat to the Worksheet
+     * adds Metadata to the Worksheet
      *
      * @param string $title
      * @return void
