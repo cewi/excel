@@ -4,10 +4,10 @@ namespace Cewi\Excel\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
-use Cake\Validation\Validator;
 use Cake\ORM\Exception\MissingTableClassException;
 use Cake\ORM\Table;
 use Cake\Database\Schema;
+use Cake\Utility\Text;
 
 /**
  * Import component
@@ -17,34 +17,6 @@ use Cake\Database\Schema;
  */
 class ImportComponent extends Component
 {
-
-    /**
-     * validate if uplaoded File is a valid Excel-File
-     *
-     * @param array $fileArray // as privded from Form-Upload
-     * @return array
-     */
-    public function validate(array $fileArray = [])
-    {
-        $validator = new Validator();
-        $validator
-                ->requirePresence('name')
-                ->notEmpty('name', __('You must submit a file'))
-                ->add('type', 'validValue', [
-                    'rule' => ['inList', [
-                            'application/vnd.ms-excel',
-                            'application/msexcel',
-                            'application/x-msexcel',
-                            'application/x-ms-excel',
-                            'application/x-excel',
-                            'application/x-dos_ms_excel',
-                            'application/xls',
-                            'application/x-xls',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']],
-                    'message' => __('File has wrong mime-Type')
-        ]);
-        return $validator->errors($fileArray);
-    }
 
     /**
      * reads a worksheet from excel-file and converts every row in an array
@@ -84,7 +56,7 @@ class ImportComponent extends Component
 
         /** convert data for building entities */
         $result = [];
-        $properties = array_shift($data); //Column names in first row name the properties
+        $properties = array_shift($data); //Column names in first row are the properties names
         foreach ($data as $row) {
             $record = array_combine($properties, $row);
             if (isset($record['modified'])) {
@@ -92,7 +64,7 @@ class ImportComponent extends Component
             }
             $result[] = $record;
         }
-
+        $this->log('Worksheet' . $worksheet . ' contained ' . count($result) . ' records', 'debug');
         return $result;
     }
 
@@ -104,45 +76,99 @@ class ImportComponent extends Component
      * @param Table $table
      * @return int Number of imprted records
      */
-    public function overwrite($file = null, $table = null)
+    public function replace($file = null, $table = null)
     {
-        //prepare Data
-        $data = $this->prepareData($file, $table);
+        $result = ['successful' => 0, 'failed' => 0];
+
         //truncate Table
         $table->deleteAll([$table->primaryKey() . ' >' => 0]);
 
-        //cretae entitites
+        //prepare Data
+        $data = $this->prepareData($file, $table);
+
+        //create entitites
         $fieldList = $table->schema()->columns();
         $entities = $table->newEntities($data, ['fieldList' => $fieldList]);
+        $this->log(count($entities) . ' ready to insert', 'debug');
 
-        //save data
-        $imported = 0;
+        //save data        
         foreach ($entities as $entity) {
             if ($table->save($entity, ['checkExisting' => false])) {
-                $imported++;
+                $result['successful'] ++;
+            } else {
+                $this->_logErrors($entity);
+                $result['failed'] ++;
             }
         }
-        return $imported;
+        return $result;
     }
 
     /**
-     * add records to table
+     * adds records to table
      *
      * @param string $file filename with full path
      * @param type $table
      * @return int Number of imported records
      */
-    public function add($file = null, $table = null)
+    public function append($file = null, $table = null)
     {
+        $result = ['successful' => 0, 'failed' => 0];
+        //prepare Data
         $data = $this->prepareData($file, $table);
-        $imported = 0;
         $entities = $table->newEntities($data);
+        //save data
         foreach ($entities as $entity) {
             if ($table->save($entity)) {
-                $imported++;
+                $result['successful'] ++;
+            } else {
+                $this->_logErrors($entity);
+                $result['failed'] ++;
             }
         }
-        return $imported;
+        return $result;
+    }
+
+    /**
+     * Update tabel with records
+     *
+     * @param string $file
+     * @param \Cake\ORM\Table $table
+     * @return array Result
+     */
+    public function update($file = null, $table = null)
+    {
+        $result = ['replaced' => 0, 'added' => 0];
+        //prepare Data
+        $data = $this->prepareData($file, $table);
+        //save data
+        foreach ($data as $record) {
+            $entity = $table->findOrCreate($record);
+            if ($entity->isNew()) {
+                $result['added'] ++;
+            } else {
+                $result['replaced'];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Log errors
+     *
+     * @param \Cake\ORM\Table\Entity $entity
+     * @return void
+     */
+    protected function _logErrors($entity = null)
+    {
+        $fields = $entity->visibleProperties();
+        $displayfield = $fields[1];
+        $this->log($entity->$displayfield . ' could not be saved: ', 'error');
+        foreach ($entity->errors() as $error) {
+            foreach ($error as $message) {
+                $this->log($message . ' is not correct!', 'error');
+            }
+        }
+        return;
     }
 
 }
