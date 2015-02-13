@@ -32,9 +32,9 @@ You can cerate Excel Workbooks from views. This works is in [dakotas](https://gi
 
 1. ExcelHelper: Takes a Query-Object and creates a worksheet. Properties are column-headers in first row.
 
-Example (assumed you have an article model, controller an views) 
+Example (assumed you have an article model and controller with the usual index-action) 
 
-include the helper:
+include the helper in the ArticleController:
 
     public $helpers = ['Cewi/Excel.Excel'];
 
