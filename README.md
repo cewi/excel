@@ -51,3 +51,9 @@ create the link to generate the file somewhere in your app:
     <?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
 
 done.
+
+## 2. Import-Component
+
+Takes a excel workbook, extracts a singel worksheet with data (as i.e. generated with the helper) and updates the database. 
+
+Docs TODO
