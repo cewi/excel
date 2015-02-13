@@ -28,3 +28,25 @@ composer require Cewi/Excel
 
 should fetch the plugin.
 
+You can cerate Excel Workbooks from views. This works is in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
+
+1. ExcelHelper: Takes a Query-Object and creates a worksheet. Properties are column-headers in first row.
+
+Example (assumed you have an article model, controller an views) 
+
+include the helper:
+
+    public $helpers = ['Cewi/Excel.Excel'];
+
+add a Folder 'xlsx' in Template/Articles ans create index.ctp in this Folder:
+    
+    <?php
+    $this->Excel->Metadata($this->name);
+    $data = $this->Excel->prepareData($articles);
+    $this->Excel->addData($data);
+    
+create the link somwhere in your app: 
+
+    <?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
+
+done.
