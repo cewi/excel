@@ -30,11 +30,12 @@ should fetch the plugin.
 
 You can cerate Excel Workbooks from views. This works is in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
-1. ExcelHelper: Takes a Query-Object and creates a worksheet. Properties are column-headers in first row.
+## 1. ExcelHelper
+Takes a Query-Object and creates a worksheet. Properties are set as column-headers in first row of the generated worksheet.
 
 Example (assumed you have an article model and controller with the usual index-action) 
 
-include the helper in the ArticleController:
+include the helper in ArticleController:
 
     public $helpers = ['Cewi/Excel.Excel'];
 
@@ -45,7 +46,7 @@ add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this
     $data = $this->Excel->prepareData($articles);
     $this->Excel->addData($data);
     
-create the link somwhere in your app: 
+create the link to generate the file somewhere in your app: 
 
     <?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
 
