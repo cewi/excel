@@ -24,7 +24,7 @@ class ImportComponent extends Component
      *
      * @param string $file name of Excel-File with full path. Must be of a readable Filetype
      * @param Table $table TableObject which will be used to build entities. Needed to identify worksheet to load
-     * @param array $options Override Worksheet name and remove prmary keys to add records instead of updating
+     * @param array $options Override Worksheet name
      * @return array Array like normally provided by request->data
      * @throws MissingTableClassException
      */
@@ -74,9 +74,10 @@ class ImportComponent extends Component
      *
      * @param string $file filename with full path
      * @param Table $table
-     * @return int Number of imprted records
+     * @param array $options Override Worksheet name
+     * @return int Number of imported records
      */
-    public function replace($file = null, $table = null)
+    public function replace($file = null, $table = null, array $options = [])
     {
         $result = ['successful' => 0, 'failed' => 0];
 
@@ -84,7 +85,7 @@ class ImportComponent extends Component
         $table->deleteAll([$table->primaryKey() . ' >' => 0]);
 
         //prepare Data
-        $data = $this->prepareData($file, $table);
+        $data = $this->prepareData($file, $table, $options);
 
         //create entitites
         $fieldList = $table->schema()->columns();
@@ -108,13 +109,14 @@ class ImportComponent extends Component
      *
      * @param string $file filename with full path
      * @param type $table
+     * @param array $options Override Worksheet name
      * @return int Number of imported records
      */
-    public function append($file = null, $table = null)
+    public function append($file = null, $table = null, array $options = [])
     {
         $result = ['successful' => 0, 'failed' => 0];
         //prepare Data
-        $data = $this->prepareData($file, $table);
+        $data = $this->prepareData($file, $table, $options);
         $entities = $table->newEntities($data);
         //save data
         foreach ($entities as $entity) {
@@ -133,13 +135,14 @@ class ImportComponent extends Component
      *
      * @param string $file
      * @param \Cake\ORM\Table $table
+     * @param array $options Override Worksheet name
      * @return array Result
      */
-    public function update($file = null, $table = null)
+    public function update($file = null, $table = null, array $options = [])
     {
         $result = ['replaced' => 0, 'added' => 0];
         //prepare Data
-        $data = $this->prepareData($file, $table);
+        $data = $this->prepareData($file, $table, $options);
         //save data
         foreach ($data as $record) {
             $entity = $table->findOrCreate($record);
