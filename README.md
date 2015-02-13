@@ -38,7 +38,7 @@ include the helper:
 
     public $helpers = ['Cewi/Excel.Excel'];
 
-add a Folder 'xlsx' in Template/Articles ans create index.ctp in this Folder:
+add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder:
     
     <?php
     $this->Excel->Metadata($this->name);
