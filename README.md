@@ -54,6 +54,6 @@ done.
 
 ## 2. Import-Component
 
-Takes a excel workbook, extracts a singel worksheet with data (as i.e. generated with the helper) and updates the database. 
+Takes a excel workbook, extracts a single worksheet with data (i.e. generated with the helper) and updates the database. 
 
 Docs TODO
