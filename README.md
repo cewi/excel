@@ -28,7 +28,7 @@ composer require Cewi/Excel
 
 should fetch the plugin.
 
-You can cerate Excel Workbooks from views. This works is in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
+You can create Excel Workbooks from views. This works is in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
 ## 1. ExcelHelper
 Takes a Query-Object and creates a worksheet from the data. Properties of the entities are set as column-headers in first row of the generated worksheet.
@@ -54,6 +54,6 @@ done.
 
 ## 2. Import-Component
 
-Takes a excel workbook, extracts a single worksheet with data (i.e. generated with the helper) and updates the database. 
+Takes a excel workbook, extracts a single worksheet with data (i.e. generated with the helper) and generates an array with data ready for building entities. 
 
 Docs TODO
