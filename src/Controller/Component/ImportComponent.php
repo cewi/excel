@@ -46,8 +46,8 @@ class ImportComponent extends Component
             $worksheet = $options['worksheet']; //desired Worksheet was provided as option
         } elseif (count($worksheets) === 1) {
             $worksheet = $worksheets[0]; //take the only worksheet in file
-        } elseif (in_array($tableName, $worksheets)) {
-            $worksheet = $tableName; //take the worksheet with the name of the table
+        } elseif (in_array($options['tableName'], $worksheets)) {
+            $worksheet = $options['tableName']; //take the worksheet with the name of the table
         } else {
             throw new MissingTableClassException(__('No proper named worksheet found'));
         }
