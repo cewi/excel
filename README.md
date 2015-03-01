@@ -1,6 +1,4 @@
-# Cewi/Excel plugin for CakePHP
-
-! Not  Ready For Production !  
+# Cewi/Excel plugin for CakePHP 
 
 The plugin is based on the work of [dakota]
 (https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://phpexcel.codeplex.com/) for the excel-related functionality. 
@@ -28,23 +26,21 @@ composer require Cewi/Excel
 
 should fetch the plugin.
 
-You can create Excel Workbooks from views. This works is in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
+You can create Excel Workbooks from views. This works like in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
 ## 1. ExcelHelper
-Takes a Query-Object and creates a worksheet from the data. Properties of the entities are set as column-headers in first row of the generated worksheet.
+Has a Method 'addTable' which takes a ResultSet and creates a worksheet from the data. Properties of the entities are set as column-headers in first row of the generated worksheet.
 
 Example (assumed you have an article model and controller with the usual index-action) 
 
-include the helper in ArticleController:
+First include the helper in ArticlesController:
 
     public $helpers = ['Cewi/Excel.Excel'];
 
-add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder:
+add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder. Include this snippet of code to get an excel-file with a single worksheet called 
+'Articles':    
     
-    <?php
-    $this->Excel->Metadata($this->name);
-    $data = $this->Excel->prepareData($articles);
-    $this->Excel->addData($data);
+    $this->Excel->addTable($articles, 'Articles');
     
 create the link to generate the file somewhere in your app: 
 
@@ -54,6 +50,33 @@ done.
 
 ## 2. Import-Component
 
-Takes a excel workbook, extracts a single worksheet with data (i.e. generated with the helper) and generates an array with data ready for building entities. 
+Takes a excel workbook, extracts a single worksheet with data (e.g. generated with the helper) and generates an array with data ready for building entities. 
 
-Docs TODO
+Include the Import-Component in the controller:
+
+     public function initialize()
+     {
+        parent::initialize();
+        $this->loadComponent('Cewi/Excel.Import');
+     }    
+
+than you can use the method
+
+     prepareEntityData($file = null, array $options = [])
+
+	e.g.	
+
+     $data = $this->Import->prepareEntityData(TMP . $this->request->data('file.name'));
+
+and you'll get an array with data like you would get from the form-helper. You then can generate and save entities in the Controller:
+
+     $entities = $table->newEntities($data);
+     foreach ($entities as $entitiy) {
+           $table->save($entitiy, ['checkExisting' => false])
+     }
+
+if your table is not empty and you don't want to replace records in the database, set `'append'=>true` in the $options array:
+
+    $data = $this->Import->prepareEntityData($file, ['append'=> true]);
+
+If there are more than one worksheets in the file you can supply the name of then Worksheet to use in the $options array, e.g.: `'worksheet'=>'Articles'`.
