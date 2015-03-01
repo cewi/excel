@@ -4,6 +4,7 @@ namespace Cewi\Excel\View\Helper;
 
 use Cake\View\Helper;
 use Cake\View\View;
+use Cake\ORM\Query;
 
 /*
  * The MIT License
@@ -31,24 +32,36 @@ use Cake\View\View;
 
 /**
  * CakePHP ExcelHelper
+ *
+ * can add a bunch of entities as a worksheet to a workbook
+ *
  * @author cewi <c.wichmann@gmx.de>
  */
 class ExcelHelper extends Helper
 {
 
+    public function addTable(Query $query = null, $name = '')
+    {
+        $this->Metadata($name);
+        $data = $this->prepareTableData($query);
+        $this->addTableData($data);
+        return;
+    }
+
     /**
-     * converts a query Object in an flat table
-     * first row are the properties
+     * converts a query Object into a flat table
+     * properties are filed in first row
      *
-     * @param \Cake\ORM\Query $query
+     * @param Query $query
      * @return array
      */
-    public function prepareData(\Cake\ORM\Query $query = null)
+    public function prepareTableData(Query $query = null)
     {
 
-        /* properties as table headers build first row */
+        /* first row contains properties */
         $data = [array_keys($query->first()->toArray())];
 
+        /** add data of an entity a row */
         foreach ($query as $entity) {
             $data[] = array_values($entity->toArray());
         }
@@ -63,7 +76,7 @@ class ExcelHelper extends Helper
      * @param array $options if set row and column, data entry starts there
      * @return void
      */
-    public function addData(array $array = [], array $options = [])
+    public function addTableData(array $array = [], array $options = [])
     {
         $rowIndex = isset($options['row']) ? $options['row'] : 1;
         foreach ($array as $row) {
