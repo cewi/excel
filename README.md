@@ -79,4 +79,4 @@ if your table is not empty and you don't want to replace records in the database
 
     $data = $this->Import->prepareEntityData($file, ['append'=> true]);
 
-If there are more than one worksheets in the file you can supply the name of then Worksheet to use in the $options array, e.g.: `'worksheet'=>'Articles'`.
+If there are more than one worksheets in the file you can supply the name of the Worksheet to use in the $options array, e.g.: `'worksheet'=>'Articles'`.
