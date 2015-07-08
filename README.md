@@ -21,7 +21,7 @@ add
  to your composer.json because this package is not on packagist. Then in your console:
 
 ```
-composer require Cewi/Excel
+composer require Cewi/Excel:dev-master
 ```
 
 should fetch the plugin.
