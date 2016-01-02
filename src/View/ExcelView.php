@@ -21,7 +21,18 @@ class ExcelView extends View
      * @var PhpExcel
      */
     public $PhpExcel = null;
+
+    /**
+     * Filename
+     * @var string
+     */
     private $__filename;
+
+    /**
+     * The subdirectory.  Excel views are always in xlsx.
+     * 
+     * @var string
+     */
     public $subDir = 'xlsx';
 
     /**
@@ -53,6 +64,7 @@ class ExcelView extends View
 
     /**
      * [render description]
+     * 
      * @param  [type] $action [description]
      * @param  [type] $layout [description]
      * @param  [type] $file   [description]
@@ -102,11 +114,21 @@ class ExcelView extends View
         return $output;
     }
 
+    /**
+     * Set the Name of Excel-File
+     *
+     * @param string $filename
+     */
     public function setFilename($filename)
     {
         $this->__filename = $filename;
     }
 
+    /**
+     * get the Name of Excel-File
+     *
+     * @return string
+     */
     public function getFilename()
     {
         if (!empty($this->__filename)) {
