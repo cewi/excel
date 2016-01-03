@@ -2,9 +2,12 @@
 
 namespace Cewi\Excel\View\Helper;
 
+use Cake\Collection\Collection;
+use Cake\Core\Configure;
+use Cake\I18n\Time;
+use Cake\ORM\Query;
 use Cake\View\Helper;
 use Cake\View\View;
-use Cake\ORM\Query;
 
 /*
  * The MIT License
@@ -33,38 +36,104 @@ use Cake\ORM\Query;
 /**
  * CakePHP ExcelHelper
  *
- * can add a bunch of entities as a worksheet to a workbook
+ * can add data to a workbook
+ *
+ * Data may be a Collection of entitites or a flat Array
  *
  * @author cewi <c.wichmann@gmx.de>
  */
 class ExcelHelper extends Helper
 {
 
-    public function addTable(Query $query = null, $name = '')
+    /**
+     * Format in which dates are exported to excel
+     * set it globally in the bootstrap file or pass it as config-Variable 
+     * 
+     * @var string
+     */
+    private $__dateformat = 'yyyy-MM-dd';
+
+    /**
+     * Constructor
+     *
+     * @param View $View
+     * @param array $config
+     */
+    public function __construct(View $View, array $config = array())
+    {
+        parent::__construct($View, $config);
+
+        if (isset($config['dateformat'])) {
+            $this->__dateformat = $config['dateformat'];
+        } else {
+            $this->__dateformat = Configure::read('excel.dateformat');
+        }
+    }
+
+    /**
+     * add new Worksheet
+     *
+     * @param mixed $data can be Query, Entity, Collection or flat Array
+     * @param string $name
+     * @return void
+     */
+    public function addWorksheet($data = null, $name = '')
     {
         $this->Metadata($name);
-        $data = $this->prepareTableData($query);
-        $this->addTableData($data);
+        
+        if (is_array($data)) {
+            $data = $this->prepareData(collection($data));
+        } elseif ($data instanceof \Cake\ORM\Entity) {
+            $data = $this->prepareEntityData($data);
+        } else {
+            $data = $this->prepareData($data);
+        }
+
+        $this->addData($data);
         return;
     }
 
     /**
-     * converts a query Object into a flat table
-     * properties are filed in first row
+     * converts a Collection into a flat Array
+     * properties are extracted from first item und ifled in first row
      *
-     * @param Query $query
+     * @param Cake\Collection\Collection $collection
      * @return array
      */
-    public function prepareTableData(Query $query = null)
+    public function prepareData(\Cake\Collection\Collection $collection = null)
     {
 
-        /* first row contains properties */
-        $data = [array_keys($query->first()->toArray())];
-
-        /** add data of an entity a row */
-        foreach ($query as $entity) {
-            $data[] = array_values($entity->toArray());
+        /* extract keys from first item */
+        $first = $collection->first();
+        if (is_array($first)) {
+            $data = [array_keys($first)];
+        } else {
+            $data = [array_keys($first->toArray())];
         }
+
+        /* add data */
+        foreach ($collection as $row) {
+            if (is_array($row)) {
+                $data[] = array_values($row);
+            } else {
+                $data[] = array_values($row->toArray());
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * converts a Entity into a flat Array
+     * properties are extracted from first item und ifled in first row
+     *
+     * @param \Cake\ORM\Entity $entity
+     * @return array
+     */
+    public function prepareEntityData(\Cake\ORM\Entity $entity = null)
+    {
+        $entityArray = $entity->toArray();
+        $data = [array_keys($entityArray)];
+        $data[] = array_values($entityArray);
 
         return $data;
     }
@@ -76,22 +145,28 @@ class ExcelHelper extends Helper
      * @param array $options if set row and column, data entry starts there
      * @return void
      */
-    public function addTableData(array $array = [], array $options = [])
+    public function addData(array $array = [], array $options = [])
     {
         $rowIndex = isset($options['row']) ? $options['row'] : 1;
         foreach ($array as $row) {
             $columnIndex = isset($options['column']) ? $options['column'] : 0;
             foreach ($row as $cell) {
-                $this->_View->PhpExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValue($cell);
+                if ($cell instanceof Time) {
+                    $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
+                }
+                if (is_array($cell)) {
+                    $cell = null; // adding an array is useless
+                }
+                $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValue($cell);
                 $columnIndex++;
             }
             $rowIndex++;
         }
 
         //auto-sizing of the columns
-        $highestColumn = $this->_View->PhpExcel->getActiveSheet()->getHighestColumn();
+        $highestColumn = $this->_View->PHPExcel->getActiveSheet()->getHighestColumn();
         foreach (range('A', $highestColumn) as $column) {
-            $this->_View->PhpExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
+            $this->_View->PHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
         }
 
         return;
@@ -105,9 +180,9 @@ class ExcelHelper extends Helper
      */
     public function MetaData($title = '')
     {
-        $this->_View->PhpExcel->getActiveSheet()->setTitle($title);
-        $this->_View->PhpExcel->getProperties()->setTitle($title);
-        $this->_View->PhpExcel->getProperties()->setSubject($title . ' ' . date('d.m.Y H:i'));
+        $this->_View->PHPExcel->getActiveSheet()->setTitle($title);
+        $this->_View->PHPExcel->getProperties()->setTitle($title);
+        $this->_View->PHPExcel->getProperties()->setSubject($title . ' ' . date('d.m.Y H:i'));
         return;
     }
 

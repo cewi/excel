@@ -2,14 +2,17 @@
 namespace App\Test\TestCase\View\Helper;
 
 use Cewi\Excel\View\Helper\ExcelHelper;
+use Cewi\Excel\View;
 use Cake\TestSuite\TestCase;
-use Cake\View\View;
+use Cake\ORM\TableRegistry;
 
 /**
  * App\View\Helper\ExcelHelper Test Case
  */
 class ExcelHelperTest extends TestCase
 {
+
+    public $fixtures = ['core.articles'];
 
     /**
      * setUp method
@@ -19,8 +22,9 @@ class ExcelHelperTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $view = new View();
-        $this->Excel = new ExcelHelper($view);
+        $excelView = new View\ExcelView();
+        $this->Excel = new ExcelHelper($excelView);
+        $this->Articles = TableRegistry::get('Articles');
     }
 
     /**
@@ -31,7 +35,8 @@ class ExcelHelperTest extends TestCase
     public function tearDown()
     {
         unset($this->Excel);
-
+        unset($this->Articles);
+        unset($this->excelView);
         parent::tearDown();
     }
 
@@ -42,6 +47,14 @@ class ExcelHelperTest extends TestCase
      */
     public function testInitialization()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // is the correct Object loaded?
+        $this->assertInstanceOf('Cewi\Excel\View\Helper\ExcelHelper', $this->Excel);
     }
+
+    public function testAddTable()
+    {
+        $query = $this->Articles->find();
+        $this->Excel->addTable($query, 'Articles');
+    }
+
 }
