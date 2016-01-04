@@ -29,7 +29,7 @@ should fetch the plugin.
 You can create Excel Workbooks from views. This works like in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
 ## 1. ExcelHelper
-Has a Method 'addWorksheet' which can take either an Entity, a ResultSet, a Collection or an Array and creates a worksheet from the data. If a Entity is provided, the Column-Headers will be the properties. In case of a ResultSet, a Collection or an Array of Entities, the Column-Headers are taken from the properties of the first Entity.
+Has a Method 'addTable' which takes a ResultSet and creates a worksheet from the data. Properties of the entities are set as column-headers in first row of the generated worksheet.
 
 Example (assumed you have an article model and controller with the usual index-action) 
 
@@ -40,7 +40,7 @@ First include the helper in ArticlesController:
 add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder. Include this snippet of code to get an excel-file with a single worksheet called 
 'Articles':    
     
-    <?= $this->Excel->addWorksheet($articles, 'Articles');?>
+    $this->Excel->addTable($articles, 'Articles');
     
 create the link to generate the file somewhere in your app: 
 
