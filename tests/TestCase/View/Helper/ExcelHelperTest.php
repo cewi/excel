@@ -51,10 +51,49 @@ class ExcelHelperTest extends TestCase
         $this->assertInstanceOf('Cewi\Excel\View\Helper\ExcelHelper', $this->Excel);
     }
 
-    public function testAddTable()
+    /**
+     * test method which converts entities to a flat array
+     */
+    public function testPrepareEntityData()
     {
-        $query = $this->Articles->find();
-        $this->Excel->addTable($query, 'Articles');
+        $entity = $this->Articles->get(1);
+
+        $result = $this->Excel->prepareEntityData($entity);
+
+        $this->assertEquals(count($result), 2);
+
+        $headers = $result[0];
+        $properties = $result[1];
+
+        $this->assertEquals(count($headers), count($properties));
+
+        $this->assertEquals($headers, ['id', 'author_id', 'title', 'body', 'published']);
+
+        $this->assertEquals($properties, [1, 1, 'First Article', 'First Article Body', 'Y']);
+    }
+
+    /**
+     * test method which converts a collection to a flat array
+     */
+    public function testPrepareCollectionData()
+    {
+        $articles = $this->Articles->find('all');
+
+        $data = collection($articles->toArray());
+
+        $result = $this->Excel->prepareCollectionData($data);
+
+        $this->assertEquals(count($result), 4);
+
+        $headers = $result[0];
+        $first = $result[1];
+        $last = $result[3];
+
+        $this->assertEquals($headers, ['id', 'author_id', 'title', 'body', 'published']);
+
+        $this->assertEquals($first, [1, 1, 'First Article', 'First Article Body', 'Y']);
+
+        $this->assertEquals($last, [3, 1, 'Third Article', 'Third Article Body', 'Y']);
     }
 
 }
