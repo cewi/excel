@@ -38,7 +38,7 @@ use Cake\View\View;
  *
  * can add data to a workbook
  *
- * Data may be a Collection of entitites or a flat Array
+ * Data may be an Entity, a Query Expression, a Collection of entitites or a flat Array
  *
  * @author cewi <c.wichmann@gmx.de>
  */
@@ -79,28 +79,40 @@ class ExcelHelper extends Helper
      */
     public function addWorksheet($data = null, $name = '')
     {
-        $this->Metadata($name);
         
+        // add empty sheet to Workbook
+        $this->addSheet($name);
+
         if (is_array($data)) {
-            $data = $this->prepareData(collection($data));
+            $data = $this->prepareCollectionData(collection($data));
         } elseif ($data instanceof \Cake\ORM\Entity) {
             $data = $this->prepareEntityData($data);
+        } elseif ($data instanceof \Cake\ORM\Query) {
+            $data = $this->prepareCollectionData(collection($data->toArray()));
         } else {
-            $data = $this->prepareData($data);
+            $data = $this->prepareCollectionData($data);
         }
 
+        // add the Data
         $this->addData($data);
+
+        //auto-sizing of the columns
+        $highestColumn = $this->_View->PHPExcel->getActiveSheet()->getHighestColumn();
+        foreach (range('A', $highestColumn) as $column) {
+            $this->_View->PHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
+        }
+
         return;
     }
 
     /**
      * converts a Collection into a flat Array
-     * properties are extracted from first item und ifled in first row
+     * properties are extracted from first item und inserted in first row
      *
-     * @param Cake\Collection\Collection $collection
+     * @param mixed $collection \Cake\Collection\Collection | \Cake\ORM\Query
      * @return array
      */
-    public function prepareData(\Cake\Collection\Collection $collection = null)
+    public function prepareCollectionData(Collection $collection = null)
     {
 
         /* extract keys from first item */
@@ -113,6 +125,7 @@ class ExcelHelper extends Helper
 
         /* add data */
         foreach ($collection as $row) {
+
             if (is_array($row)) {
                 $data[] = array_values($row);
             } else {
@@ -124,7 +137,7 @@ class ExcelHelper extends Helper
 
     /**
      * converts a Entity into a flat Array
-     * properties are extracted from first item und ifled in first row
+     * properties are inserted in first row
      *
      * @param \Cake\ORM\Entity $entity
      * @return array
@@ -151,11 +164,12 @@ class ExcelHelper extends Helper
         foreach ($array as $row) {
             $columnIndex = isset($options['column']) ? $options['column'] : 0;
             foreach ($row as $cell) {
-                if ($cell instanceof Time) {
-                    $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
-                }
                 if (is_array($cell)) {
-                    $cell = null; // adding an array is useless
+                    $cell = null; // adding cells of this Type is useless
+                } elseif ($cell instanceof Time) {
+                    $cell = $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
+                } elseif ($cell instanceof \Cake\Database\Expression\QueryExpression) {
+                    $cell = null;  // @TODO find a way to get teh Values and insert them into teh Sheet
                 }
                 $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValue($cell);
                 $columnIndex++;
@@ -163,23 +177,20 @@ class ExcelHelper extends Helper
             $rowIndex++;
         }
 
-        //auto-sizing of the columns
-        $highestColumn = $this->_View->PHPExcel->getActiveSheet()->getHighestColumn();
-        foreach (range('A', $highestColumn) as $column) {
-            $this->_View->PHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
-        }
-
         return;
     }
 
     /**
-     * adds Metadata to the Worksheet
+     * create empty Sheet and add some Metadata
      *
      * @param string $title
      * @return void
      */
-    public function MetaData($title = '')
+    public function addSheet($title = '')
     {
+        $this->_View->PHPExcel->createSheet();
+        $this->_View->currentSheetIndex++;
+        $this->_View->PHPExcel->setActiveSheetIndex($this->_View->currentSheetIndex);
         $this->_View->PHPExcel->getActiveSheet()->setTitle($title);
         $this->_View->PHPExcel->getProperties()->setTitle($title);
         $this->_View->PHPExcel->getProperties()->setSubject($title . ' ' . date('d.m.Y H:i'));
