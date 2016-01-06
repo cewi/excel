@@ -169,7 +169,7 @@ class ExcelHelper extends Helper
                 } elseif ($cell instanceof Time) {
                     $cell = $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
                 } elseif ($cell instanceof \Cake\Database\Expression\QueryExpression) {
-                    $cell = null;  // @TODO find a way to get teh Values and insert them into teh Sheet
+                    $cell = null;  // @TODO find a way to get the Values and insert them into the Sheet
                 }
                 $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValue($cell);
                 $columnIndex++;
