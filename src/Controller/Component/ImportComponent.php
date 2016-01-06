@@ -56,27 +56,32 @@ class ImportComponent extends Component
         /**  load and configure PHPExcelReader  * */
         \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
         $fileType = \PHPExcel_IOFactory::identify($file);
+
         $PhpExcelReader = \PHPExcel_IOFactory::createReader($fileType);
         $PhpExcelReader->setReadDataOnly(true);
 
-        /** identify worksheets in file * */
-        $worksheets = $PhpExcelReader->listWorksheetNames($file);
+        if ($fileType !== 'CSV') {  // csv-files have only one 'worksheet'
 
-        $worksheetToLoad = null;
+            /** identify worksheets in file * */
+            $worksheets = $PhpExcelReader->listWorksheetNames($file);
 
-        if (count($worksheets) === 1) {
-            $worksheetToLoad = $worksheets[0];  //first option: if there is only one worksheet, use it
-        } elseif (isset($options['worksheet'])) {
-            $worksheetToLoad = $options['worksheet']; //second option: desired worksheet was provided as option
-        } else {
-            $worksheetToLoad = $this->_registry->getController()->name; //last option: try to load worksheet with the name of current controller
+            $worksheetToLoad = null;
+
+            if (count($worksheets) === 1) {
+                $worksheetToLoad = $worksheets[0];  //first option: if there is only one worksheet, use it
+            } elseif (isset($options['worksheet'])) {
+                $worksheetToLoad = $options['worksheet']; //second option: desired worksheet was provided as option
+            } else {
+                $worksheetToLoad = $this->_registry->getController()->name; //last option: try to load worksheet with the name of current controller
+            }
+            if (!in_array($worksheetToLoad, $worksheets)) {
+                throw new MissingTableClassException(__('No proper named worksheet found'));
+            }
+
+            /** load the sheet and convert data to an array */
+            $PhpExcelReader->setLoadSheetsOnly($worksheetToLoad);
         }
-        if (!in_array($worksheetToLoad, $worksheets)) {
-            throw new MissingTableClassException(__('No proper named worksheet found'));
-        }
 
-        /** load the sheet and convert data to an array */
-        $PhpExcelReader->setLoadSheetsOnly($worksheetToLoad);
         $PhpExcel = $PhpExcelReader->load($file);
         $data = $PhpExcel->getSheet(0)->toArray();
 
@@ -96,8 +101,8 @@ class ImportComponent extends Component
         }
 
         /** log in debug mode */
-        $this->log('Worksheet ' . $worksheetToLoad . ' contained ' . count($result) . ' records', 'debug');
-        
+        $this->log(count($result) . ' records were extracted from File ' . $file, 'debug');
+
         return $result;
     }
 
