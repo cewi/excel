@@ -24,12 +24,23 @@ add
 composer require Cewi/Excel:dev-master
 ```
 
-should fetch the plugin.
+should fetch the plugin. 
+
+Laod the Plugin in your bootstrap.php as ususal:
+Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
+
+Load RequestHandler Component in the Controller, e.g.: 
+
+public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('RequestHandler');
+    }
 
 You can create Excel Workbooks from views. This works like in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
 ## 1. ExcelHelper
-Has a Method 'addTable' which takes a ResultSet and creates a worksheet from the data. Properties of the entities are set as column-headers in first row of the generated worksheet.
+Has a Method 'addworksheet' which takes a ResultSet, a Enitiy, a Collection of Entities or a Array of Data and creates a worksheet from the data. Properties of the Entities, or the key of the first record in the array are set as column-headers in first row of the generated worksheet.
 
 Example (assumed you have an article model and controller with the usual index-action) 
 
