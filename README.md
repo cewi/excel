@@ -26,16 +26,21 @@ composer require Cewi/Excel:dev-master
 
 should fetch the plugin. 
 
-Laod the Plugin in your bootstrap.php as ususal:
-Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
+Load the Plugin in your bootstrap.php as ususal:
+
+```
+	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
+```
 
 Load RequestHandler Component in the Controller, e.g.: 
 
-public function initialize()
-    {
-        parent::initialize();
-        $this->loadComponent('RequestHandler');
-    }
+```
+	public function initialize()
+		{
+        		parent::initialize();
+        		$this->loadComponent('RequestHandler');
+        	}
+```
 
 You can create Excel Workbooks from views. This works like in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
@@ -46,16 +51,22 @@ Example (assumed you have an article model and controller with the usual index-a
 
 First include the helper in ArticlesController:
 
-    public $helpers = ['Cewi/Excel.Excel'];
+```
+   public $helpers = ['Cewi/Excel.Excel'];
+```
 
 add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder. Include this snippet of code to get an excel-file with a single worksheet called 
 'Articles':    
     
+```    
     $this->Excel->addWorksheet($articles, 'Articles');
+```    
     
 create the link to generate the file somewhere in your app: 
 
+```
     <?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
+```
 
 done.
 
