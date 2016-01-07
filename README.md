@@ -40,7 +40,7 @@ First include the helper in ArticlesController:
 add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder. Include this snippet of code to get an excel-file with a single worksheet called 
 'Articles':    
     
-    $this->Excel->addTable($articles, 'Articles');
+    $this->Excel->addWorksheet($articles, 'Articles');
     
 create the link to generate the file somewhere in your app: 
 
