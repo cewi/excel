@@ -172,7 +172,7 @@ class ExcelHelper extends Helper
                 if (is_array($cell)) {
                     $cell = null; // adding cells of this Type is useless
                 } elseif ($cell instanceof Date or $cell instanceof Time or $cell instanceof FrozenDate or $cell instanceof FrozenTime) {
-                    $cell = $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
+                    $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
                 } elseif ($cell instanceof QueryExpression) {
                     $cell = null;  // @TODO find a way to get the Values and insert them into the Sheet
                 }
