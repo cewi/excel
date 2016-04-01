@@ -4,7 +4,11 @@ namespace Cewi\Excel\View\Helper;
 
 use Cake\Collection\Collection;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\View\Helper;
 use Cake\View\View;
@@ -85,9 +89,9 @@ class ExcelHelper extends Helper
 
         if (is_array($data)) {
             $data = $this->prepareCollectionData(collection($data));
-        } elseif ($data instanceof \Cake\ORM\Entity) {
+        } elseif ($data instanceof Entity) {
             $data = $this->prepareEntityData($data);
-        } elseif ($data instanceof \Cake\ORM\Query) {
+        } elseif ($data instanceof Query) {
             $data = $this->prepareCollectionData(collection($data->toArray()));
         } else {
             $data = $this->prepareCollectionData($data);
@@ -139,10 +143,10 @@ class ExcelHelper extends Helper
      * converts a Entity into a flat Array
      * properties are inserted in first row
      *
-     * @param \Cake\ORM\Entity $entity
+     * @param Entity $entity
      * @return array
      */
-    public function prepareEntityData(\Cake\ORM\Entity $entity = null)
+    public function prepareEntityData(Entity $entity = null)
     {
         $entityArray = $entity->toArray();
         $data = [array_keys($entityArray)];
@@ -166,9 +170,9 @@ class ExcelHelper extends Helper
             foreach ($row as $cell) {
                 if (is_array($cell)) {
                     $cell = null; // adding cells of this Type is useless
-                } elseif ($cell instanceof Time) {
+                } elseif ($cell instanceof Time or $cell instanceof FrozenDate or $cell instanceof FrozenTime) {
                     $cell = $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
-                } elseif ($cell instanceof \Cake\Database\Expression\QueryExpression) {
+                } elseif ($cell instanceof QueryExpression) {
                     $cell = null;  // @TODO find a way to get the Values and insert them into the Sheet
                 }
                 $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValue($cell);
