@@ -45,7 +45,7 @@ Load RequestHandler Component in the Controller, e.g.:
 You can create Excel Workbooks from views. This works like in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
 ## 1. ExcelHelper
-Has a Method 'addworksheet' which takes a ResultSet, a Enitiy, a Collection of Entities or a Array of Data and creates a worksheet from the data. Properties of the Entities, or the key of the first record in the array are set as column-headers in first row of the generated worksheet.
+Has a Method 'addworksheet' which takes a ResultSet, a Entity, a Collection of Entities or a Array of Data and creates a worksheet from the data. Properties of the Entities, or the key of the first record in the array are set as column-headers in first row of the generated worksheet. Be careful if you usen non-standard column-types. The Helper actually works only with strings, numbers and dates. 
 
 Register xlsx-Extension in config/routes.php file before the routes that should be affected:
 
