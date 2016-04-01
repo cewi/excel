@@ -47,9 +47,15 @@ You can create Excel Workbooks from views. This works like in [dakotas](https://
 ## 1. ExcelHelper
 Has a Method 'addworksheet' which takes a ResultSet, a Enitiy, a Collection of Entities or a Array of Data and creates a worksheet from the data. Properties of the Entities, or the key of the first record in the array are set as column-headers in first row of the generated worksheet.
 
+Register xlsx-Extension in config/routes.php file before the routes that should be affected:
+
+```
+    Router::extensions(['xlsx']);
+```
+
 Example (assumed you have an article model and controller with the usual index-action) 
 
-First include the helper in ArticlesController:
+Include the helper in ArticlesController:
 
 ```
    public $helpers = ['Cewi/Excel.Excel'];
