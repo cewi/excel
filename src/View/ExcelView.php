@@ -75,6 +75,17 @@ class ExcelView extends View
     }
 
     /**
+     * Initialization hook method.
+     * Load the Helper
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->layout('default');
+        $this->loadHelper('Cewi/Excel.Excel');
+    }
+    
+    /**
      * [render description]
      * 
      * @param  [type] $action [description]
