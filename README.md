@@ -32,13 +32,15 @@ Load the Plugin in your bootstrap.php as ususal:
 	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
 ```
 
-Load RequestHandler Component in the Controller, e.g.: 
+Load RequestHandler Component and initialize the viewClassMap in your Controller, e.g.: 
 
 ```
 	public function initialize()
 		{
         		parent::initialize();
-        		$this->loadComponent('RequestHandler');
+        		$this->loadComponent('RequestHandler', [
+            			'viewClassMap' => ['xlsx' => 'Cewi/Excel.Excel']
+        ]);
         	}
 ```
 
