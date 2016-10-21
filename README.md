@@ -43,8 +43,21 @@ Load RequestHandler Component and initialize the viewClassMap in your Controller
         ]);
         	}
 ```
-You have to provide a layout for the generated Excel-Files. Add a folder xlsx in src/Template/Layout/ subdirectory and within that folder 
-a file default.ctp with the minimum content:
+
+You need to set up parsing for the xlsx extension. Add the following to your config/routes.php file:
+
+```
+Router::extensions('xlsx');
+```
+or within a scope
+
+```
+$routes->extensions([''xlsx']);
+```
+(Setting this in the plugin's config/routes.php file is currently broken. So you do have to provide the code in the application's config/routes.php file)
+
+
+You further have to provide a layout for the generated Excel-Files. Add a folder xlsx in src/Template/Layout/ subdirectory and within that folder a file named default.ctp with this minimum content:
 ```  
 <?= $this->fetch('content') ?>
 ```  
