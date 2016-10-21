@@ -43,6 +43,11 @@ Load RequestHandler Component and initialize the viewClassMap in your Controller
         ]);
         	}
 ```
+You have to provide a layout for the generated Excel-Files. Add a folder xlsx in src/Template/Layout/ subdirectory and within that folder 
+a file default.ctp with the minimum content:
+```  
+<?= $this->fetch('content') ?>
+```  
 
 You can create Excel Workbooks from views. This works like in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
 
