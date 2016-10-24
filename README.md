@@ -52,7 +52,7 @@ Router::extensions('xlsx');
 or within a scope
 
 ```
-$routes->extensions([''xlsx']);
+$routes->extensions(['xlsx']);
 ```
 (Setting this in the plugin's config/routes.php file is currently broken. So you do have to provide the code in the application's config/routes.php file)
 
