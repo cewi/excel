@@ -11,6 +11,7 @@ use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
+use Cake\ORM\ResultSet;
 use Cake\View\Helper;
 use Cake\View\View;
 
@@ -93,6 +94,8 @@ class ExcelHelper extends Helper
         } elseif ($data instanceof Entity) {
             $data = $this->prepareEntityData($data);
         } elseif ($data instanceof Query) {
+            $data = $this->prepareCollectionData(collection($data->toArray()));
+        } elseif ($data instanceof ResultSet) {
             $data = $this->prepareCollectionData(collection($data->toArray()));
         } else {
             $data = $this->prepareCollectionData($data);
