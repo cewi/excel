@@ -42,6 +42,6 @@ class ImportComponentTest extends TestCase
      */
     public function testInitialization()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertInstanceOf('\Cewi\Excel\Controller\Component\ImportComponent', $this->Import);
     }
 }
