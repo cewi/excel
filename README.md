@@ -43,6 +43,8 @@ Load RequestHandler Component and initialize the viewClassMap in your Controller
         ]);
         	}
 ```
+Be careful: RequestHandlerComponent is already loaded in your AppController by default. Adapt the settings to your needs.
+
 
 You need to set up parsing for the xlsx extension. Add the following to your config/routes.php file:
 
