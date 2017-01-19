@@ -32,7 +32,7 @@ Load the Plugin in your bootstrap.php as ususal:
 	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
 ```
 
-Load RequestHandler Component and initialize the viewClassMap in your Controller, e.g.: 
+RequestHandler Component is configured by the Plugin's bootstrap file. If not you could do this this in your controller's initialize method, e.g.:
 
 ```
 	public function initialize()
@@ -129,4 +129,4 @@ if your table is not empty and you don't want to replace records in the database
 
     $data = $this->Import->prepareEntityData($file, ['append'=> true]);
 
-If there are more than one worksheets in the file you can supply the name of the Worksheet to use in the $options array, e.g.: `'worksheet'=>'Articles'`.
+If there are more than one worksheets in the file you can supply the name or index of the Worksheet to use in the $options array, e.g.: `'worksheet'=>'Articles'`. or `'worksheet'=>0`.
