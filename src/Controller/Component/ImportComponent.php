@@ -69,8 +69,10 @@ class ImportComponent extends Component
 
             if (count($worksheets) === 1) {
                 $worksheetToLoad = $worksheets[0];  //first option: if there is only one worksheet, use it
+            } elseif (isset($options['worksheet']) && is_int($options['worksheet']) && isset($worksheets[$options['worksheet']])) {
+                $worksheetToLoad = $worksheets[$options['worksheet']]; //second option: select a fixed worksheet index
             } elseif (isset($options['worksheet'])) {
-                $worksheetToLoad = $options['worksheet']; //second option: desired worksheet was provided as option
+                $worksheetToLoad = $options['worksheet']; //third option: desired worksheet was provided as option
             } else {
                 $worksheetToLoad = $this->_registry->getController()->name; //last option: try to load worksheet with the name of current controller
             }
