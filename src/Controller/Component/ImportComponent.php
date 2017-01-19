@@ -41,13 +41,13 @@ class ImportComponent extends Component
     /**
      * reads a file PHPExcel can understand and converts a contained worksheet into an array
      * which can be used to build entities. If the File contains more than one worksheet and it is not named like the Controller
-     * you have to provide the name of the workshhet to load in the options array.
+     * you have to provide the name or index of the desired worksheet in the options array.
      * If you set $options['append'] to true, the primary key will be deleted.
-     * @todo Find a way to make to handle primary keys anmed other than id.
+     * @todo Find a way to handle primary keys other than id.
      *
      * @param string $file name of Excel-File with full path. Must be of a readable Filetype (xls, xlsx, csv, ods)
      * @param array $options Override Worksheet name, set append Mode
-     * @return array . The Array has the same structure as provided by request->data
+     * @return array The Array has the same structure as provided by request->data
      * @throws MissingTableClassException
      */
     public function prepareEntityData($file = null, array $options = [])
