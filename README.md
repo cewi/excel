@@ -100,7 +100,7 @@ done.
 
 ## 2. Import-Component
 
-Takes a excel workbook, extracts a single worksheet with data (e.g. generated with the helper) and generates an array with data ready for building entities. 
+Takes a excel workbook, extracts a single worksheet with data (e.g. generated with the helper) and generates an array with data ready for building entities. First row must contain names of properties/database columns.
 
 Include the Import-Component in the controller:
 
