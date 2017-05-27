@@ -113,9 +113,10 @@ Include the Import-Component in the controller:
 than you can use the method
 
      prepareEntityData($file = null, array $options = [])
+     
+E.g. if you've uploaded a file:
 
-	e.g.	
-
+	move_uploaded_file($this->request->data['file']['tmp_name'], TMP . DS . $this->request->data['file']['name']);
      $data = $this->Import->prepareEntityData(TMP . $this->request->data('file.name'));
 
 and you'll get an array with data like you would get from the form-helper. You then can generate and save entities in the Controller:
