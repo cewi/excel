@@ -46,12 +46,12 @@ RequestHandler Component is configured by the Plugin's bootstrap file. If not yo
 Be careful: RequestHandlerComponent is already loaded in your AppController by default. Adapt the settings to your needs.
 
 
-You need to set up parsing for the xlsx extension. Add the following to your config/routes.php file:
+You need to set up parsing for the xlsx extension. Add the following to your config/routes.php file before any route or scope definition:
 
 ```
 Router::extensions('xlsx');
 ```
-or within a scope
+or you can add within a scope:
 
 ```
 $routes->extensions(['xlsx']);
