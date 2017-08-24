@@ -116,8 +116,8 @@ than you can use the method
      
 E.g. if you've uploaded a file:
 
-	move_uploaded_file($this->request->data['file']['tmp_name'], TMP . DS . $this->request->data['file']['name']);
-     $data = $this->Import->prepareEntityData(TMP . $this->request->data('file.name'));
+	move_uploaded_file($this->request->getData('file.tmp_name'), TMP . DS . $this->request->getData('file.name'));
+     $data = $this->Import->prepareEntityData(TMP . $this->request->getData('file.name'));
 
 and you'll get an array with data like you would get from the form-helper. You then can generate and save entities in the Controller:
 
