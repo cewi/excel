@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Test\TestCase\View\Helper;
 
 use Cewi\Excel\View\Helper\ExcelHelper;
 use Cewi\Excel\View;
 use Cake\TestSuite\TestCase;
 use Cake\ORM\TableRegistry;
+use Cake\I18n\FrozenTime;
 
 /**
  * App\View\Helper\ExcelHelper Test Case
@@ -12,7 +14,7 @@ use Cake\ORM\TableRegistry;
 class ExcelHelperTest extends TestCase
 {
 
-    public $fixtures = ['core.articles'];
+    public $fixtures = ['app.articles'];
 
     /**
      * setUp method
@@ -58,6 +60,8 @@ class ExcelHelperTest extends TestCase
     {
         $entity = $this->Articles->get(1);
 
+        //dd($entity);
+
         $result = $this->Excel->prepareEntityData($entity);
 
         $this->assertEquals(count($result), 2);
@@ -67,9 +71,17 @@ class ExcelHelperTest extends TestCase
 
         $this->assertEquals(count($headers), count($properties));
 
-        $this->assertEquals($headers, ['id', 'author_id', 'title', 'body', 'published']);
+        $this->assertEquals($headers, ['id', 'name', 'body', 'published', 'created', 'modified', 'number']);
 
-        $this->assertEquals($properties, [1, 1, 'First Article', 'First Article Body', 'Y']);
+        $this->assertEquals($properties, [
+            1,
+            'First Article',
+            'First Article Body',
+            1,
+            new FrozenTime('2007-03-18T10:39:23+00:00'),
+            new FrozenTime('2007-03-18T10:41:31+00:00'),
+            1.4
+        ]);
     }
 
     /**
@@ -89,11 +101,27 @@ class ExcelHelperTest extends TestCase
         $first = $result[1];
         $last = $result[3];
 
-        $this->assertEquals($headers, ['id', 'author_id', 'title', 'body', 'published']);
+        $this->assertEquals($headers, ['id', 'name', 'body', 'published', 'created', 'modified', 'number']);
 
-        $this->assertEquals($first, [1, 1, 'First Article', 'First Article Body', 'Y']);
+        $this->assertEquals($first, [
+            1,
+            'First Article',
+            'First Article Body',
+            1,
+            new FrozenTime('2007-03-18T10:39:23'),
+            new FrozenTime('2007-03-18T10:41:31'),
+            1.4
+        ]);
 
-        $this->assertEquals($last, [3, 1, 'Third Article', 'Third Article Body', 'Y']);
+        $this->assertEquals($last, [
+            3,
+            'Third Article',
+            '000123',
+            0,
+            new FrozenTime('2007-03-18 10:43:23'),
+            new FrozenTime('2007-03-18 10:45:31'),
+            20000000
+        ]);
     }
 
 }
