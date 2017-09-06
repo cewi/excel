@@ -14,6 +14,7 @@ use Cake\ORM\Query;
 use Cake\ORM\ResultSet;
 use Cake\View\Helper;
 use Cake\View\View;
+use PHPExcel_Cell_DataType;
 
 /*
  * The MIT License
@@ -85,7 +86,7 @@ class ExcelHelper extends Helper
      */
     public function addWorksheet($data = null, $name = '')
     {
-        
+
         // add empty sheet to Workbook
         $this->addSheet($name);
 
@@ -172,19 +173,43 @@ class ExcelHelper extends Helper
         foreach ($array as $row) {
             $columnIndex = isset($options['column']) ? $options['column'] : 0;
             foreach ($row as $cell) {
-                if (is_array($cell)) {
-                    $cell = null; // adding cells of this Type is useless
-                } elseif ($cell instanceof Date or $cell instanceof Time or $cell instanceof FrozenDate or $cell instanceof FrozenTime) {
-                    $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be convert for Excel
-                } elseif ($cell instanceof QueryExpression) {
-                    $cell = null;  // @TODO find a way to get the Values and insert them into the Sheet
-                }
-                $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValue($cell);
+                $this->_addCellData($cell, $columnIndex, $rowIndex);
                 $columnIndex++;
             }
             $rowIndex++;
         }
+        return;
+    }
 
+    /**
+     * Fills in the data in a cell.
+     * respects data type
+     *
+     * @param mixed $cell
+     * @param int $columnIndex
+     * @param int $rowIndex
+     * @return void
+     */
+    protected function _addCellData($cell = null, $columnIndex = 1, $rowIndex = 1)
+    {
+        if (is_array($cell)) {
+            $cell = null; // adding cells of this Type is useless
+            return;
+        }
+        if ($cell instanceof Date or $cell instanceof Time or $cell instanceof FrozenDate or $cell instanceof FrozenTime) {
+            $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be converted for Excel
+            $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, PHPExcel_Cell_DataType::TYPE_STRING);
+            return;
+        }
+        if ($cell instanceof QueryExpression) {
+            $cell = null;  // @TODO find a way to get the Values and insert them into the Sheet
+            return;
+        }
+        if (is_string($cell)) {
+            $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, PHPExcel_Cell_DataType::TYPE_STRING);
+            return;
+        }
+        $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, PHPExcel_Cell_DataType::TYPE_NUMERIC);
         return;
     }
 
