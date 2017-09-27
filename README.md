@@ -1,7 +1,7 @@
 # Cewi/Excel plugin for CakePHP 
 
 The plugin is based on the work of [dakota]
-(https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://phpexcel.codeplex.com/) for the excel-related functionality. 
+(https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://github.com/PHPOffice/PHPExcel) for the excel-related functionality. 
 
 ## Installation
 
