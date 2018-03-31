@@ -26,7 +26,7 @@ composer require Cewi/Excel:dev-phpspreadsheet
 
 should fetch the plugin. 
 
-Load the Plugin in your bootstrap.php as ususal:
+Load the Plugin in your bootstrap.php as usual:
 
 ```
 	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
