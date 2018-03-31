@@ -1,7 +1,7 @@
 # Cewi/Excel plugin for CakePHP 
 
 The plugin is based on the work of [dakota]
-(https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://github.com/PHPOffice/PHPExcel) for the excel-related functionality. 
+(https://github.com/dakota/CakeExcel) and uses [PHPSpreadsheet](https://github.com/PHPOffice/PHPSpreadsheet) for the excel-related functionality. 
 
 ## Installation
 
@@ -21,7 +21,7 @@ add
  to your composer.json because this package is not on packagist. Then in your console:
 
 ```
-composer require Cewi/Excel:dev-master
+composer require Cewi/Excel:dev-phpspreadsheet
 ```
 
 should fetch the plugin. 
@@ -32,7 +32,7 @@ Load the Plugin in your bootstrap.php as ususal:
 	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
 ```
 
-RequestHandler Component is configured by the Plugin's bootstrap file. If not you could do this this in your controller's initialize method, e.g.:
+RequestHandler Component is configured by the Plugin's bootstrap file. If not, you could do this this in your controller's initialize method, e.g.:
 
 ```
 	public function initialize()
