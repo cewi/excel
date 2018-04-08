@@ -1,13 +1,12 @@
 <?php
 
-namespace Cewi\Excel\Controller\Component;
-
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
 use Cake\ORM\Exception\MissingTableClassException;
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
+namespace Cewi\Excel\Controller\Component;
 
 /**
  * The MIT License
@@ -64,7 +63,7 @@ class ImportComponent extends Component
         $PhpExcelReader->setReadDataOnly(true);
 
         if ($fileType !== 'CSV') {  // csv-files can have only one 'worksheet'
-
+            
             /** identify worksheets in file * */
             $worksheets = $PhpExcelReader->listWorksheetNames($file);
 
@@ -96,13 +95,23 @@ class ImportComponent extends Component
 
         foreach ($data as $row) {
             $record = array_combine($properties, $row);
-            // we'll take modified data form the moment importing records @TODO: Should that be made configurable?
+            
+            // we'll take modified date from the moment importing records 
+            // @TODO: Should that behavior be made configurable?
             if (isset($record['modified'])) {
                 unset($record['modified']);
             }
+            
+            // when appending remove pk 
             if (isset($options['type']) && $options['type'] == 'append' && isset($record['id'])) {
                 unset($record['id']);
             }
+            
+            // sometimes PHPSpreadsheet casts ids as float
+            if (isset($record['id'])){
+                $record['id'] = (int) $record['id'];
+            }
+            
             $result[] = $record;
         }
 
