@@ -32,7 +32,7 @@ class ImportComponentTest extends TestCase
 
     /**
      * test prepareEntityData() function
-     * @TODO mak it working ;-)
+     * @TODO make it working ;-)
      */
     public function testPrepareEntityData(){
         $result = $this->Import->prepareEntityData($this->path.'articles.ods');
