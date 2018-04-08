@@ -12,7 +12,7 @@ class ImportComponentTest extends TestCase
 {
     
     /**
-     * Path for trest-Files
+     * Path for files with test-data
      * 
      * @var string
      */
@@ -32,6 +32,7 @@ class ImportComponentTest extends TestCase
 
     /**
      * test prepareEntityData() function
+     * @TODO mak it working ;-)
      */
     public function testPrepareEntityData(){
         $result = $this->Import->prepareEntityData($this->path.'articles.ods');
