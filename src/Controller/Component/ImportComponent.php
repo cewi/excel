@@ -1,12 +1,12 @@
 <?php
 
+namespace Cewi\Excel\Controller\Component;
+
 use Cake\Controller\Component;
 use Cake\ORM\Exception\MissingTableClassException;
 use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
-namespace Cewi\Excel\Controller\Component;
 
 /**
  * The MIT License
