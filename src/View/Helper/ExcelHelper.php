@@ -101,7 +101,7 @@ class ExcelHelper extends Helper
         } else {
             $data = $this->prepareCollectionData($data);
         }
-
+        
         // Add the Data
         $this->addData($data);
 
@@ -163,15 +163,15 @@ class ExcelHelper extends Helper
     /**
      * Adds data to a worksheet
      *
-     * @param array $array
+     * @param array $data data
      * @param array $options if set row and column, data entry starts there
      * @return void
      */
-    public function addData(array $array = [], array $options = [])
+    public function addData(array $data = [], array $options = [])
     {
         $rowIndex = isset($options['row']) ? $options['row'] : 1;
-        foreach ($array as $row) {
-            $columnIndex = isset($options['column']) ? $options['column'] : 0;
+        foreach ($data as $row) {
+            $columnIndex = isset($options['column']) ? $options['column'] : 1; // In PHPSpreadsheet Columns start with 1!
             foreach ($row as $cell) {
                 $this->_addCellData($cell, $columnIndex, $rowIndex);
                 $columnIndex++;
