@@ -98,7 +98,7 @@ create the link to generate the file somewhere in your app:
 
 done.
 
-## 2. Import-Component
+## 2. ImportComponent
 
 Takes a excel workbook, extracts a single worksheet with data (e.g. generated with the helper) and generates an array with data ready for building entities. First row must contain names of properties/database columns.
 
