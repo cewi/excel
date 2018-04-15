@@ -10,14 +10,7 @@ use Cake\TestSuite\TestCase;
  */
 class ImportComponentTest extends TestCase
 {
-    
-    /**
-     * Path for files with test-data
-     * 
-     * @var string
-     */
-    protected $path = ROOT . DS. 'vendor'. DS . 'Cewi' . DS . 'Excel' . DS . 'tests' . DS . 'Files'. DS; 
-    
+
     /**
      * setUp method
      *
@@ -31,16 +24,6 @@ class ImportComponentTest extends TestCase
     }
 
     /**
-     * test prepareEntityData() function
-     * @TODO make it working ;-)
-     */
-    public function testPrepareEntityData(){
-        $result = $this->Import->prepareEntityData($this->path.'articles.ods');
-        //dd($result);
-        $this->assertTrue(true);
-    }
-
-        /**
      * tearDown method
      *
      * @return void

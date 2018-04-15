@@ -3,10 +3,8 @@
 namespace Cewi\Excel\Controller\Component;
 
 use Cake\Controller\Component;
+use Cake\Controller\ComponentRegistry;
 use Cake\ORM\Exception\MissingTableClassException;
-use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 /**
  * The MIT License
@@ -41,7 +39,7 @@ class ImportComponent extends Component
 {
 
     /**
-     * reads a file \PhpOffice\PhpSpreadsheet\Spreadsheet can understand and converts a contained worksheet into an array
+     * reads a file PHPExcel can understand and converts a contained worksheet into an array
      * which can be used to build entities. If the File contains more than one worksheet and it is not named like the Controller
      * you have to provide the name or index of the desired worksheet in the options array.
      * If you set $options['append'] to true, the primary key will be deleted.
@@ -55,15 +53,15 @@ class ImportComponent extends Component
     public function prepareEntityData($file = null, array $options = [])
     {
 
-        /**  load and configure \PhpOffice\PhpSpreadsheet\SpreadsheetReader  * */
-        Cell::setValueBinder(new AdvancedValueBinder());
-        $fileType = IOFactory::identify($file);
+        /**  load and configure PHPExcelReader  * */
+        \PHPExcel_Cell::setValueBinder(new \PHPExcel_Cell_AdvancedValueBinder());
+        $fileType = \PHPExcel_IOFactory::identify($file);
 
-        $PhpExcelReader = IOFactory::createReader($fileType);
+        $PhpExcelReader = \PHPExcel_IOFactory::createReader($fileType);
         $PhpExcelReader->setReadDataOnly(true);
 
-        if ($fileType !== 'CSV') {  // csv-files can have only one 'worksheet'
-            
+        if ($fileType !== 'CSV') {  // csv-files have only one 'worksheet'
+
             /** identify worksheets in file * */
             $worksheets = $PhpExcelReader->listWorksheetNames($file);
 
@@ -95,23 +93,12 @@ class ImportComponent extends Component
 
         foreach ($data as $row) {
             $record = array_combine($properties, $row);
-            
-            // we'll take modified date from the moment importing records 
-            // @TODO: Should that behavior be made configurable?
             if (isset($record['modified'])) {
                 unset($record['modified']);
             }
-            
-            // when appending remove pk 
             if (isset($options['type']) && $options['type'] == 'append' && isset($record['id'])) {
                 unset($record['id']);
             }
-            
-            // sometimes PHPSpreadsheet casts ids as float
-            if (isset($record['id'])){
-                $record['id'] = (int) $record['id'];
-            }
-            
             $result[] = $record;
         }
 
