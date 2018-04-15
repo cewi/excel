@@ -14,12 +14,12 @@ use Cake\ORM\Query;
 use Cake\ORM\ResultSet;
 use Cake\View\Helper;
 use Cake\View\View;
-use PHPExcel_Cell_DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 /*
  * The MIT License
  *
- * Copyright 2015 cewi <c.wichmann@gmx.de>.
+ * Copyright 2018 cewi <c.wichmann@gmx.de>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,8 +54,8 @@ class ExcelHelper extends Helper
 
     /**
      * Format in which dates are exported to excel
-     * set it globally in the bootstrap file or pass it as config-Variable 
-     * 
+     * set it globally in the bootstrap file or pass it as config-Variable
+     *
      * @var string
      */
     private $__dateformat = 'yyyy-MM-dd';
@@ -78,7 +78,7 @@ class ExcelHelper extends Helper
     }
 
     /**
-     * add new Worksheet
+     * Add new Worksheet
      *
      * @param mixed $data can be Query, Entity, Collection or flat Array
      * @param string $name
@@ -87,7 +87,7 @@ class ExcelHelper extends Helper
     public function addWorksheet($data = null, $name = '')
     {
 
-        // add empty sheet to Workbook
+        // Add empty sheet to Workbook
         $this->addSheet($name);
 
         if (is_array($data)) {
@@ -101,21 +101,21 @@ class ExcelHelper extends Helper
         } else {
             $data = $this->prepareCollectionData($data);
         }
-
-        // add the Data
+        
+        // Add the Data
         $this->addData($data);
 
         //auto-sizing of the columns
-        $highestColumn = $this->_View->PHPExcel->getActiveSheet()->getHighestColumn();
+        $highestColumn = $this->_View->PHPSpreadsheet->getActiveSheet()->getHighestColumn();
         foreach (range('A', $highestColumn) as $column) {
-            $this->_View->PHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
+            $this->_View->PHPSpreadsheet->getActiveSheet()->getColumnDimension($column)->setAutoSize(true);
         }
 
         return;
     }
 
     /**
-     * converts a Collection into a flat Array
+     * Converts a Collection into a flat Array
      * properties are extracted from first item und inserted in first row
      *
      * @param mixed $collection \Cake\Collection\Collection | \Cake\ORM\Query
@@ -124,7 +124,7 @@ class ExcelHelper extends Helper
     public function prepareCollectionData(Collection $collection = null)
     {
 
-        /* extract keys from first item */
+        /* Extract keys from first item */
         $first = $collection->first();
         if (is_array($first)) {
             $data = [array_keys($first)];
@@ -132,7 +132,7 @@ class ExcelHelper extends Helper
             $data = [array_keys($first->toArray())];
         }
 
-        /* add data */
+        /* Add data */
         foreach ($collection as $row) {
 
             if (is_array($row)) {
@@ -145,7 +145,7 @@ class ExcelHelper extends Helper
     }
 
     /**
-     * converts a Entity into a flat Array
+     * Converts a Entity into a flat Array
      * properties are inserted in first row
      *
      * @param Entity $entity
@@ -161,17 +161,17 @@ class ExcelHelper extends Helper
     }
 
     /**
-     * adds data to a worksheet
+     * Adds data to a worksheet
      *
-     * @param array $array
+     * @param array $data data
      * @param array $options if set row and column, data entry starts there
      * @return void
      */
-    public function addData(array $array = [], array $options = [])
+    public function addData(array $data = [], array $options = [])
     {
         $rowIndex = isset($options['row']) ? $options['row'] : 1;
-        foreach ($array as $row) {
-            $columnIndex = isset($options['column']) ? $options['column'] : 0;
+        foreach ($data as $row) {
+            $columnIndex = isset($options['column']) ? $options['column'] : 1; // In PHPSpreadsheet Columns start with 1!
             foreach ($row as $cell) {
                 $this->_addCellData($cell, $columnIndex, $rowIndex);
                 $columnIndex++;
@@ -198,7 +198,7 @@ class ExcelHelper extends Helper
         }
         if ($cell instanceof Date or $cell instanceof Time or $cell instanceof FrozenDate or $cell instanceof FrozenTime) {
             $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be converted for Excel
-            $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, PHPExcel_Cell_DataType::TYPE_STRING);
+            $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_STRING);
             return;
         }
         if ($cell instanceof QueryExpression) {
@@ -206,10 +206,10 @@ class ExcelHelper extends Helper
             return;
         }
         if (is_string($cell)) {
-            $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, PHPExcel_Cell_DataType::TYPE_STRING);
+            $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_STRING);
             return;
         }
-        $this->_View->PHPExcel->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, PHPExcel_Cell_DataType::TYPE_NUMERIC);
+        $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_NUMERIC);
         return;
     }
 
@@ -221,12 +221,12 @@ class ExcelHelper extends Helper
      */
     public function addSheet($title = '')
     {
-        $this->_View->PHPExcel->createSheet();
+        $this->_View->PHPSpreadsheet->createSheet();
         $this->_View->currentSheetIndex++;
-        $this->_View->PHPExcel->setActiveSheetIndex($this->_View->currentSheetIndex);
-        $this->_View->PHPExcel->getActiveSheet()->setTitle($title);
-        $this->_View->PHPExcel->getProperties()->setTitle($title);
-        $this->_View->PHPExcel->getProperties()->setSubject($title . ' ' . date('d.m.Y H:i'));
+        $this->_View->PHPSpreadsheet->setActiveSheetIndex($this->_View->currentSheetIndex);
+        $this->_View->PHPSpreadsheet->getActiveSheet()->setTitle($title);
+        $this->_View->PHPSpreadsheet->getProperties()->setTitle($title);
+        $this->_View->PHPSpreadsheet->getProperties()->setSubject($title . ' ' . date('d.m.Y H:i'));
         return;
     }
 

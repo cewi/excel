@@ -1,7 +1,6 @@
 # Cewi/Excel plugin for CakePHP 
 
-The plugin is based on the work of [dakota]
-(https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://github.com/PHPOffice/PHPExcel) for the excel-related functionality. 
+The plugin is based on the work of [dakota](https://github.com/dakota/CakeExcel) and uses [PHPSpreadsheet](https://github.com/PHPOffice/PHPSpreadsheet) for the excel-related functionality. 
 
 ## Installation
 
@@ -21,18 +20,18 @@ add
  to your composer.json because this package is not on packagist. Then in your console:
 
 ```
-composer require Cewi/Excel:dev-master
+composer require Cewi/Excel:dev-phpspreadsheet
 ```
 
 should fetch the plugin. 
 
-Load the Plugin in your bootstrap.php as ususal:
+Load the Plugin in your bootstrap.php as usual:
 
 ```
 	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
 ```
 
-RequestHandler Component is configured by the Plugin's bootstrap file. If not you could do this this in your controller's initialize method, e.g.:
+RequestHandler Component is configured by the Plugin's bootstrap file. If not, you could do this this in your controller's initialize method, e.g.:
 
 ```
 	public function initialize()
@@ -54,7 +53,7 @@ Router::extensions('xlsx');
 or you can add within a scope:
 
 ```
-$routes->extensions(['xlsx']);
+$routes->setExtensions(['xlsx']);
 ```
 (Setting this in the plugin's config/routes.php file is currently broken. So you do have to provide the code in the application's config/routes.php file)
 
@@ -116,14 +115,14 @@ than you can use the method
      
 E.g. if you've uploaded a file:
 
-	move_uploaded_file($this->request->getData('file.tmp_name'), TMP . DS . $this->request->getData('file.name'));
-     $data = $this->Import->prepareEntityData(TMP . $this->request->getData('file.name'));
+     move_uploaded_file($this->gerRequest()->getData('file.tmp_name'), TMP . DS . $this->getRequest()->getData('file.name'));
+     $data = $this->Import->prepareEntityData(TMP . $this->getRequest()->getData('file.name'));
 
 and you'll get an array with data like you would get from the form-helper. You then can generate and save entities in the Controller:
 
      $entities = $table->newEntities($data);
-     foreach ($entities as $entitiy) {
-           $table->save($entitiy, ['checkExisting' => false])
+     foreach ($entities as $entity) {
+           $table->save($entity, ['checkExisting' => false])
      }
 
 if your table is not empty and you don't want to replace records in the database, set `'append'=>true` in the $options array:
