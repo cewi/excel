@@ -7,7 +7,7 @@ use Cake\Core\Exception\Exception;
 use Cake\Event\EventManager;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use Cake\Utility\Inflector;
+use Cake\Utility\Text;
 use Cake\View\View;
 use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
@@ -85,7 +85,7 @@ class ExcelView extends View
     public function initialize()
     {
         parent::initialize();
-        $this->layout('default');
+        $this->setLayout('default');
         $this->loadHelper('Cewi/Excel.Excel');
     }
 
@@ -100,14 +100,14 @@ class ExcelView extends View
     public function render($action = null, $layout = null, $file = null)
     {
         $content = parent::render($action, false, $file);
-        if ($this->response->type() == 'text/html') {
+        if ($this->response->getType() == 'text/html') {
             return $content;
         }
 
         $content = $this->__output();
         $this->Blocks->set('content', $content);
 
-        $this->response->download($this->getFilename());
+        $this->response->withDownload($this->getFilename());
 
         return $this->Blocks->get('content');
     }
@@ -168,7 +168,7 @@ class ExcelView extends View
         if (!empty($this->__filename)) {
             return $this->__filename . '.xlsx';
         }
-        return Inflector::slug($this->request->url) . '.xlsx';
+        return Text::slug($this->request->getRequestTarget()) . '.xlsx';
     }
 
 }

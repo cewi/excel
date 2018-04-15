@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Controller\Component;
+namespace Cewi\Excel\Test\TestCase\Controller\Component;
 
 use Cewi\Excel\Controller\Component\ImportComponent;
 use Cake\Controller\ComponentRegistry;

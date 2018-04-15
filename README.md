@@ -53,7 +53,7 @@ Router::extensions('xlsx');
 or you can add within a scope:
 
 ```
-$routes->extensions(['xlsx']);
+$routes->setExtensions(['xlsx']);
 ```
 (Setting this in the plugin's config/routes.php file is currently broken. So you do have to provide the code in the application's config/routes.php file)
 
@@ -97,7 +97,7 @@ create the link to generate the file somewhere in your app:
 
 done.
 
-## 2. Import-Component
+## 2. ImportComponent
 
 Takes a excel workbook, extracts a single worksheet with data (e.g. generated with the helper) and generates an array with data ready for building entities. First row must contain names of properties/database columns.
 
@@ -115,8 +115,8 @@ than you can use the method
      
 E.g. if you've uploaded a file:
 
-	move_uploaded_file($this->request->getData('file.tmp_name'), TMP . DS . $this->request->getData('file.name'));
-     $data = $this->Import->prepareEntityData(TMP . $this->request->getData('file.name'));
+	move_uploaded_file($this->getRequest()->getData('file.tmp_name'), TMP . DS . $this->getRequest()->getData('file.name'));
+     $data = $this->Import->prepareEntityData(TMP . $this->getRequest()->getData('file.name'));
 
 and you'll get an array with data like you would get from the form-helper. You then can generate and save entities in the Controller:
 

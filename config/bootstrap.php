@@ -8,7 +8,7 @@ use Cake\Event\EventManager;
  * use sqlite for temporary Data
  * borrowed idea from debug_kit
  */
-ConnectionManager::config('excel', [
+ConnectionManager::setConfig('excel', [
     'className' => 'Cake\Database\Connection',
     'driver' => 'Cake\Database\Driver\Sqlite',
     'database' => TMP . 'excel.sqlite',
@@ -22,13 +22,12 @@ ConnectionManager::config('excel', [
  * load and prepare RequestHandler in all Controllers
  */
 EventManager::instance()
-        ->attach(
-                function (Cake\Event\Event $event) {
-            $controller = $event->subject();
+        ->on('Controller.initialize', function (Cake\Event\Event $event) {
+            $controller = $event->getSubject();
             if ($controller->components()->has('RequestHandler')) {
-                $controller->RequestHandler->config('viewClassMap.xlsx', 'Cewi/Excel.Excel');
+                $controller->RequestHandler->setConfig('viewClassMap.xlsx', 'Cewi/Excel.Excel');
             }
-        }, 'Controller.initialize'
+        }
 );
 
 /**

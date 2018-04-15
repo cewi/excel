@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Test\TestCase\View\Helper;
+namespace Cewi\Excel\Test\TestCase\View\Helper;
 
 use Cewi\Excel\View\Helper\ExcelHelper;
 use Cewi\Excel\View;
@@ -14,7 +14,7 @@ use Cake\I18n\FrozenTime;
 class ExcelHelperTest extends TestCase
 {
 
-    public $fixtures = ['app.articles'];
+    public $fixtures = ['plugin.Cewi/Excel.articles'];
 
     /**
      * setUp method
