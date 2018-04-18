@@ -62,7 +62,7 @@ class ExcelView extends View
         if (isset($viewOptions['templatePath']) && $viewOptions['templatePath'] == 'Error') {
             $this->layoutPath = null;
             $this->subDir = null;
-            $response->type('html');
+            $response->withType('html');
 
             return;
         }
