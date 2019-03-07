@@ -66,7 +66,7 @@ class ExcelHelper extends Helper
      * @param View $View
      * @param array $config
      */
-    public function __construct(View $View, array $config = array())
+    public function __construct(View $View, array $config = [])
     {
         parent::__construct($View, $config);
 
@@ -86,7 +86,6 @@ class ExcelHelper extends Helper
      */
     public function addWorksheet($data = null, $name = '')
     {
-
         // Add empty sheet to Workbook
         $this->addSheet($name);
 
@@ -101,7 +100,6 @@ class ExcelHelper extends Helper
         } else {
             $data = $this->prepareCollectionData($data);
         }
-
         // Add the Data
         $this->addData($data);
 
@@ -123,7 +121,6 @@ class ExcelHelper extends Helper
      */
     public function prepareCollectionData(Collection $collection = null)
     {
-
         /* Extract keys from first item */
         $first = $collection->first();
         if (is_array($first)) {
@@ -134,13 +131,13 @@ class ExcelHelper extends Helper
 
         /* Add data */
         foreach ($collection as $row) {
-
             if (is_array($row)) {
                 $data[] = array_values($row);
             } else {
                 $data[] = array_values($row->toArray());
             }
         }
+
         return $data;
     }
 
@@ -178,6 +175,7 @@ class ExcelHelper extends Helper
             }
             $rowIndex++;
         }
+
         return;
     }
 
@@ -194,27 +192,39 @@ class ExcelHelper extends Helper
     {
         if (is_array($cell)) {
             $cell = null; // adding cells of this Type is useless
+
             return;
         }
-        if ($cell instanceof Date or $cell instanceof Time or $cell instanceof FrozenDate or $cell instanceof FrozenTime) {
-            $cell = $cell->toUnixString();  // Dates must be converted in unix
-            $coordinate = $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->getCoordinate();
-            $this->_View->PHPSpreadsheet->getActiveSheet()->setCellValue($coordinate, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($cell));
+        if ($cell instanceof Date || $cell instanceof Time || $cell instanceof FrozenDate || $cell instanceof FrozenTime) {
+            $cell = $cell->toUnixString(); // Dates must be converted in unix
+            $coordinate = $this->_View->PHPSpreadsheet
+                ->getActiveSheet()
+                ->getCellByColumnAndRow($columnIndex, $rowIndex)
+                ->getCoordinate();
+
+            $this->_View->PHPSpreadsheet
+                ->getActiveSheet()
+                ->setCellValue($coordinate, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($cell));
+
             $this->_View->PHPSpreadsheet->getActiveSheet()
                 ->getStyle($coordinate)
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DDMMYYYY);
+
             return;
         }
         if ($cell instanceof QueryExpression) {
-            $cell = null;  // @TODO find a way to get the Values and insert them into the Sheet
+            $cell = null; //TODO find a way to get the Values and insert them into the Sheet
+
             return;
         }
         if (is_string($cell)) {
             $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_STRING);
+
             return;
         }
         $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_NUMERIC);
+
         return;
     }
 
@@ -232,7 +242,7 @@ class ExcelHelper extends Helper
         $this->_View->PHPSpreadsheet->getActiveSheet()->setTitle($title);
         $this->_View->PHPSpreadsheet->getProperties()->setTitle($title);
         $this->_View->PHPSpreadsheet->getProperties()->setSubject($title . ' ' . date('d.m.Y H:i'));
+
         return;
     }
-
 }
