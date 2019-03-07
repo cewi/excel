@@ -204,9 +204,7 @@ class ExcelHelper extends Helper
 
             $this->_View->PHPSpreadsheet
                 ->getActiveSheet()
-                ->setCellValue($coordinate, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($cell));
-
-            $this->_View->PHPSpreadsheet->getActiveSheet()
+                ->setCellValue($coordinate, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($cell))
                 ->getStyle($coordinate)
                 ->getNumberFormat()
                 ->setFormatCode($this->__dateformat);
