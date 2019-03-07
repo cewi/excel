@@ -209,7 +209,7 @@ class ExcelHelper extends Helper
             $this->_View->PHPSpreadsheet->getActiveSheet()
                 ->getStyle($coordinate)
                 ->getNumberFormat()
-                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DDMMYYYY);
+                ->setFormatCode($this->__dateformat);
 
             return;
         }
