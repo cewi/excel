@@ -101,7 +101,7 @@ class ExcelHelper extends Helper
         } else {
             $data = $this->prepareCollectionData($data);
         }
-        
+
         // Add the Data
         $this->addData($data);
 
@@ -197,8 +197,13 @@ class ExcelHelper extends Helper
             return;
         }
         if ($cell instanceof Date or $cell instanceof Time or $cell instanceof FrozenDate or $cell instanceof FrozenTime) {
-            $cell = $cell->i18nFormat($this->__dateformat);  // Dates must be converted for Excel
-            $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_STRING);
+            $cell = $cell->toUnixString();  // Dates must be converted in unix
+            $coordinate = $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->getCoordinate();
+            $this->_View->PHPSpreadsheet->getActiveSheet()->setCellValue($coordinate, \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($cell));
+            $this->_View->PHPSpreadsheet->getActiveSheet()
+                ->getStyle($coordinate)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DDMMYYYY);
             return;
         }
         if ($cell instanceof QueryExpression) {
