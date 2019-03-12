@@ -10,14 +10,14 @@ The recommended way to install composer packages is:
 
 add 
 
-    "repositories": [
-             {
-                "type": "vcs",
-                "url": "https://github.com/cewi/excel"
-            }
-        ] 
+"repositories": [
+   {
+       "type": "vcs",
+        "url": "https://github.com/cewi/excel"
+        }
+] 
         
- to your composer.json because this package is not on packagist. Then in your console:
+to your composer.json because this package is not on packagist. Then in your console:
 
 ```
 composer require Cewi/Excel:dev-phpspreadsheet
@@ -34,16 +34,16 @@ bin/cake plugin load Cewi\Excel
 RequestHandler Component is configured by the Plugin's bootstrap file. If not, you could do this this in your controller's initialize method, e.g.:
 
 ```
-	public function initialize()
-		{
-        		parent::initialize();
-        		$this->loadComponent('RequestHandler', [
-            			'viewClassMap' => ['xlsx' => 'Cewi/Excel.Excel']
-        ]);
-        	}
+public function initialize()
+	{
+        	parent::initialize();
+        	$this->loadComponent('RequestHandler', [
+            		'viewClassMap' => ['xlsx' => 'Cewi/Excel.Excel']
+        	]
+	);
+}
 ```
 Be careful: RequestHandlerComponent is already loaded in your AppController by default. Adapt the settings to your needs.
-
 
 You need to set up parsing for the xlsx extension. Add the following to your config/routes.php file before any route or scope definition:
 
