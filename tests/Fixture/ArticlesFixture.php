@@ -24,7 +24,7 @@ class ArticlesFixture extends TestFixture
         'id' => ['type' => 'integer'],
         'name' => ['type' => 'string', 'length' => 255, 'null' => false],
         'body' => 'text',
-        'published' => ['type' => 'integer', 'default' => '0', 'null' => false],
+        'published' => 'boolean',
         'created' => 'datetime',
         'modified' => 'datetime',
         'number' => 'float',
