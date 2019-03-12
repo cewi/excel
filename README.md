@@ -25,10 +25,10 @@ composer require Cewi/Excel:dev-phpspreadsheet
 
 should fetch the plugin. 
 
-Load the Plugin in your bootstrap.php as usual:
+Load the Plugin
 
 ```
-	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
+	bin/cake plugin load Cewi\Excel
 ```
 
 RequestHandler Component is configured by the Plugin's bootstrap file. If not, you could do this this in your controller's initialize method, e.g.:
