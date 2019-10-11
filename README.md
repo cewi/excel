@@ -20,7 +20,7 @@ add
 to your composer.json because this package is not on packagist. Then in your console:
 
 ```
-composer require Cewi/Excel:dev-phpspreadsheet
+composer require cewi/excel:dev-phpspreadsheet
 ```
 
 should fetch the plugin. 
@@ -95,7 +95,13 @@ create the link to generate the file somewhere in your app:
     <?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
 ```
 
-done.
+done. If you want to change the name of the downloaded file, add
+
+```
+$this->Excel->setFilename('foo');
+```
+to your template file. The file will  now be called 'foo.xlsx'. 
+
 
 ## 2. ImportComponent
 
