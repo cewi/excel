@@ -97,6 +97,12 @@ create the link to generate the file somewhere in your app:
 ```
 
 done.
+The name of the file will bw lowercase plural of the entity with '.xslx' added, e.g. 'articles.xlsx'. If you like to change that, add
+
+```
+   $this->Excel->setFilename('foo');
+```
+in the Template. The filename now will be 'foo.xlslx'. 
 
 ## 2. ImportComponent
 
