@@ -1,4 +1,4 @@
-# Cewi/Excel plugin for CakePHP 
+# cewi/excel plugin for CakePHP 
 
 The plugin is based on the work of [dakota]
 (https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://github.com/PHPOffice/PHPExcel) for the excel-related functionality. 
@@ -21,7 +21,7 @@ add
  to your composer.json because this package is not on packagist. Then in your console:
 
 ```
-composer require Cewi/Excel:dev-master
+composer require cewi/excel
 ```
 
 should fetch the plugin. 
