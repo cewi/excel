@@ -103,7 +103,7 @@ class ExcelView extends View
         $content = $this->__output();
         $this->Blocks->set('content', $content);
 
-        $this->response->withDownload($this->getFilename());
+        $this->response = $this->response->withDownload($this->getFilename());
 
         return $this->Blocks->get('content');
     }
@@ -163,7 +163,7 @@ class ExcelView extends View
         if (!empty($this->__filename)) {
             return $this->__filename . '.xlsx';
         }
-        return Text::slug($this->request->getRequestTarget()) . '.xlsx';
+        return Text::slug(str_replace('.xlsx', '', $this->request->getRequestTarget())) . '.xlsx';
     }
 
 }
