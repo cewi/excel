@@ -243,4 +243,15 @@ class ExcelHelper extends Helper
 
         return;
     }
+    
+    /**
+     * Set the Name of Excel-File
+     *
+     * @param string $filename
+     */
+    public function setFilename($filename)
+    {
+        $this->_View->setFilename($filename);
+        return;
+    }
 }
