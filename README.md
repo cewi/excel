@@ -26,10 +26,10 @@ composer require cewi/excel
 
 should fetch the plugin. 
 
-Load the Plugin in your bootstrap.php as ususal:
+Load the Plugin in the boostrap() method in Application.php as ususal:
 
 ```
-	Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
+	$this->addPlugin('Cewi/Excel');
 ```
 
 RequestHandler Component is configured by the Plugin's bootstrap file. If not you could do this this in your controller's initialize method, e.g.:
