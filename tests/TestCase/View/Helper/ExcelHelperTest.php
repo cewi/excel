@@ -124,4 +124,14 @@ class ExcelHelperTest extends TestCase
         ]);
     }
 
+    /**
+     * test method for setting filename for downloads
+     */
+    public function testSetFilename()
+    {
+        $view = $this->Excel->getView();
+        $this->assertEquals('.xlsx', $view->getFilename());
+        $this->Excel->setFilename('foo');
+        $this->assertEquals('foo.xlsx', $view->getFilename());
+    }
 }
