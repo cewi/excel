@@ -74,7 +74,7 @@ Has a Method 'addworksheet' which takes a ResultSet, an Entity, a Collection of 
 Register xlsx-Extension in config/routes.php file before the routes that should be affected:
 
 ```
-    Router::extensions(['xlsx']);
+Router::extensions(['xlsx']);
 ```
 
 Example (assumed you have an article model and controller with the usual index-action) 
@@ -82,25 +82,25 @@ Example (assumed you have an article model and controller with the usual index-a
 Include the helper in ArticlesController:
 
 ```
-   public $helpers = ['Cewi/Excel.Excel'];
+public $helpers = ['Cewi/Excel.Excel'];
 ```
 
 add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder. Include this snippet of code to get an excel-file with a single worksheet called 'Articles':    
     
 ```    
-    $this->Excel->addWorksheet($articles, 'Articles');
+$this->Excel->addWorksheet($articles, 'Articles');
 ```    
     
 create the link to generate the file somewhere in your app: 
 
 ```
-    <?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
+<?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
 ```
 
 done. The name of the file will be the lowercase plural of the entity with '.xslx' added, e.g. 'articles.xlsx'. If you like to change that, add
 
 ```
-   $this->Excel->setFilename('foo');
+$this->Excel->setFilename('foo');
 ```
 in the Template file. The filename now will be 'foo.xlslx'. 
 
@@ -110,37 +110,37 @@ Takes a excel workbook, extracts a single worksheet with data (e.g. generated wi
 
 Include the Import-Component in the controller:
 
-     public function initialize()
-     {
-        parent::initialize();
-        $this->loadComponent('Cewi/Excel.Import');
-     }    
+ public function initialize()
+ {
+     parent::initialize();
+     $this->loadComponent('Cewi/Excel.Import');
+ }    
 
 than you can use the method
 
-     prepareEntityData($file = null, array $options = [])
+prepareEntityData($file = null, array $options = [])
      
 E.g. if you've uploaded a file:
 
-     move_uploaded_file($this->getRequest()->getData('file.tmp_name'), TMP . DS . $this->getRequest()->getData('file.name'));
-     $data = $this->Import->prepareEntityData(TMP . $this->getRequest()->getData('file.name'));
+move_uploaded_file($this->getRequest()->getData('file.tmp_name'), TMP . DS . $this->getRequest()->getData('file.name'));
+$data = $this->Import->prepareEntityData(TMP . $this->getRequest()->getData('file.name'));
 
 and you'll get an array with data like you would get from the Form-Helper. You then can generate and save entities in the Controller:
 
-     $entities = $table->newEntities($data);
-     foreach ($entities as $entity) {
-           $table->save($entity, ['checkExisting' => false])
-     }
+$entities = $table->newEntities($data);
+foreach ($entities as $entity) {
+     $table->save($entity, ['checkExisting' => false])
+}
 
 if your table is not empty and you don't want to replace records in the database, set `'append'=>true` in the $options array:
 
-    $data = $this->Import->prepareEntityData($file, ['append'=> true]);
+$data = $this->Import->prepareEntityData($file, ['append'=> true]);
 
 If there are more than one worksheets in the file you can supply the name or index of the Worksheet to use in the $options array, e.g.: 
  
-	$data = $this->Import->prepareEntityData($file, ['worksheet'=> 0]);
+$data = $this->Import->prepareEntityData($file, ['worksheet'=> 0]);
 	
 or
 	
-	$data = $this->Import->prepareEntityData($file, ['worksheet'=> 'Articles']);
+$data = $this->Import->prepareEntityData($file, ['worksheet'=> 'Articles']);
 
