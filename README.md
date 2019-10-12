@@ -32,7 +32,7 @@ Load the Plugin in the boostrap() method in Application.php as ususal:
 	$this->addPlugin('Cewi/Excel');
 ```
 
-RequestHandler Component is configured by the Plugin's bootstrap file. If not you could do this this in your controller's initialize method, e.g.:
+RequestHandler Component is configured by the Plugin's bootstrap file. But you could do this also in a controller's initialize method, e.g.:
 
 ```
 	public function initialize()
@@ -51,7 +51,7 @@ You need to set up parsing for the xlsx extension. Add the following to your con
 ```
 Router::extensions('xlsx');
 ```
-or you can add within a scope:
+you can configure this also within a scope:
 
 ```
 $routes->setExtensions(['xlsx']);
@@ -64,10 +64,12 @@ You further have to provide a layout for the generated Excel-Files. Add a folder
 <?= $this->fetch('content') ?>
 ```  
 
-You can create Excel Workbooks from views. This works like in [dakotas](https://github.com/dakota/CakeExcel) plugin. Look there for docs. Additions:
+You can create Excel Workbooks from views. This works like in [dakota's](https://github.com/dakota/CakeExcel) plugin. Look there for docs. 
+
+Additions in this Plugin:
 
 ## 1. ExcelHelper
-Has a Method 'addworksheet' which takes a ResultSet, a Entity, a Collection of Entities or an Array of Data and creates a worksheet from the data. Properties of the Entities, or the keys of the first record in the array are set as column-headers in first row of the generated worksheet. Be careful if you use non-standard column-types. The Helper actually works only with strings, numbers and dates. 
+Has a Method 'addworksheet' which takes a ResultSet, an Entity, a Collection of Entities or an Array of Data and creates a worksheet from the data. Properties of the Entities, or the keys of the first record in the array are set as column-headers in first row of the generated worksheet. Be careful if you use non-standard column-types. The Helper actually works only with strings, numbers and dates. 
 
 Register xlsx-Extension in config/routes.php file before the routes that should be affected:
 
@@ -83,8 +85,7 @@ Include the helper in ArticlesController:
    public $helpers = ['Cewi/Excel.Excel'];
 ```
 
-add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder. Include this snippet of code to get an excel-file with a single worksheet called 
-'Articles':    
+add a Folder 'xlsx' in Template/Articles and create the file 'index.ctp' in this Folder. Include this snippet of code to get an excel-file with a single worksheet called 'Articles':    
     
 ```    
     $this->Excel->addWorksheet($articles, 'Articles');
@@ -96,13 +97,12 @@ create the link to generate the file somewhere in your app:
     <?= $this->Html->link(__('Excel'), ['controller' => 'Articles', 'action' => 'index', '_ext'=>'xlsx']); ?>
 ```
 
-done.
-The name of the file will bw lowercase plural of the entity with '.xslx' added, e.g. 'articles.xlsx'. If you like to change that, add
+done. The name of the file will be the lowercase plural of the entity with '.xslx' added, e.g. 'articles.xlsx'. If you like to change that, add
 
 ```
    $this->Excel->setFilename('foo');
 ```
-in the Template. The filename now will be 'foo.xlslx'. 
+in the Template file. The filename now will be 'foo.xlslx'. 
 
 ## 2. ImportComponent
 
@@ -122,10 +122,10 @@ than you can use the method
      
 E.g. if you've uploaded a file:
 
-     move_uploaded_file($this->gerRequest()->getData('file.tmp_name'), TMP . DS . $this->getRequest()->getData('file.name'));
+     move_uploaded_file($this->getRequest()->getData('file.tmp_name'), TMP . DS . $this->getRequest()->getData('file.name'));
      $data = $this->Import->prepareEntityData(TMP . $this->getRequest()->getData('file.name'));
 
-and you'll get an array with data like you would get from the form-helper. You then can generate and save entities in the Controller:
+and you'll get an array with data like you would get from the Form-Helper. You then can generate and save entities in the Controller:
 
      $entities = $table->newEntities($data);
      foreach ($entities as $entity) {
