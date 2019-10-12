@@ -14,7 +14,7 @@ use Cake\I18n\FrozenTime;
 class ExcelHelperTest extends TestCase
 {
 
-    public $fixtures = ['plugin.Cewi/Excel.articles'];
+    public $fixtures = ['plugin.Cewi/Excel.Articles'];
 
     /**
      * setUp method
