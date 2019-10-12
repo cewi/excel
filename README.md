@@ -136,6 +136,6 @@ If there are more than one worksheets in the file you can supply the name or ind
 $data = $this->Import->prepareEntityData($file, ['worksheet'=> 0]);
 ```
 or
-	
+```
 $data = $this->Import->prepareEntityData($file, ['worksheet'=> 'Articles']);
 ```
