@@ -37,7 +37,7 @@ class ArticlesFixture extends TestFixture
         [
             'name' => 'First Article',
             'body' => 'First Article Body',
-            'published' => true,
+            'published' => 1,
             'created' => '2007-03-18 10:39:23',
             'modified' => '2007-03-18 10:41:31',
             'number' => 1.4
@@ -45,7 +45,7 @@ class ArticlesFixture extends TestFixture
         [
             'name' => 'Second Article',
             'body' => 'Second Article Body',
-            'published' => true,
+            'published' => 1,
             'created' => '2007-03-18 10:41:23',
             'modified' => '2007-03-18 10:43:31',
             'number' => -1
@@ -53,7 +53,7 @@ class ArticlesFixture extends TestFixture
         [
             'name' => 'Third Article',
             'body' => '000123',
-            'published' => false,
+            'published' => 0,
             'created' => '2007-03-18 10:43:23',
             'modified' => '2007-03-18 10:45:31',
             'number' => 20000000
