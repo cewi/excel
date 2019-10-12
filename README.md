@@ -134,7 +134,7 @@ $data = $this->Import->prepareEntityData($file, ['append'=> true]);
 If there are more than one worksheets in the file you can supply the name or index of the Worksheet to use in the $options array, e.g.: 
 ``` 
 $data = $this->Import->prepareEntityData($file, ['worksheet'=> 0]);
-	
+```
 or
 	
 $data = $this->Import->prepareEntityData($file, ['worksheet'=> 'Articles']);
