@@ -1,6 +1,6 @@
 # cewi/excel plugin for CakePHP 
 
-## Pease note that this Plugin was written for an now outdated and no longer supported Version of Cakephp. It will get no updates. Use it on your own risk. You have benn warned!
+## Pease note that this Plugin was written for an now outdated and no longer supported Version of Cakephp. It will get no updates. Use it on your own risk. You have been warned!
 
 The plugin is based on the work of [dakota]
 (https://github.com/dakota/CakeExcel) and uses [PHPExcel](https://github.com/PHPOffice/PHPExcel) for the excel-related functionality. 
