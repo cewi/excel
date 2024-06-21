@@ -1,4 +1,4 @@
-# cewi/excel plugin for CakePHP 
+# cewi/excel plugin for CakePHP 3
 
 ## Pease note that this Plugin was written for an now outdated and no longer supported Version of Cakephp. It will get no updates. Use it on your own risk. You have been warned!
 
